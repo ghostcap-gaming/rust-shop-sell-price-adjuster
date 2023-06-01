@@ -1,15 +1,20 @@
 import json
 
-# Load the config file
-with open('Items.json') as f:
-    data = json.load(f)
+def update_sell_price(data):
+    for shop in data["Shop"]:
+        for item in shop["Items"]:
+            if "Price" in item and "Sell Price" in item:
+                item["Sell Price"] = item["Price"] * 0.2
+    return data
 
-# Update the SellPrice for each item
-for item in data:
-    buy_price = data[item]['BuyPrice']
-    sell_price = round(buy_price * 0.25)
-    data[item]['SellPrice'] = sell_price
+def main():
+    with open('Items.json', 'r') as file:
+        data = json.load(file)
+    
+    updated_data = update_sell_price(data)
+    
+    with open('Items.json', 'w') as file:
+        json.dump(updated_data, file, indent=2)  # Change indent to 2
 
-# Save the updated config back to the file
-with open('Items_new.json', 'w') as f:
-    json.dump(data, f, indent=2)
+if __name__ == "__main__":
+    main()
